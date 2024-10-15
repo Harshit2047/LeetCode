@@ -1,20 +1,21 @@
 class Solution {
 public:
     long long minimumSteps(string s) {
-        long long ans = 0;
-        int white = 0;
-        int n = s.length();
-        for(int i=0;i<n;i++)
-        {
-            if(s[i]=='0')
-            {
-                ans+=white;
+        long long ans=0;
+        int i=0;
+        int j=0;
+        while(j<s.size()){
+            while(j<s.size() && s[j]!='0'){
+                j++;
             }
-            else
-            {
-                white++;
+            if(s[i]=='1' && s[j]=='0'){
+                swap(s[i],s[j]);
+                ans=ans+j-i;
+                i++;
             }
-
+            else{
+                i++;j++;
+            }
         }
         return ans;
     }
