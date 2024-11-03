@@ -1,7 +1,16 @@
 class Solution {
 public:
-    int fib(int n) {
+
+    int fibo(int n,vector<int> &arr){
         if(n<=1) return n;
-        return fib(n-1)+fib(n-2);
+        if(arr[n]!=0) return arr[n];
+        int ans=fibo(n-1,arr)+fibo(n-2,arr);
+        arr[n]=ans;
+        return ans;
+
+    }
+    int fib(int n) {
+        vector<int> arr(n+1,0);
+         return fibo(n,arr);         
     }
 };
