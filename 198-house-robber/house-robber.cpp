@@ -1,13 +1,14 @@
 class Solution {
 public:
-    int healper(vector<int> nums,int idx,vector<int> &v){
-        if(idx>=nums.size()) return 0;
-        if(v[idx]!=-1) return v[idx];
-        return v[idx] = max(nums[idx]+healper(nums,idx+2,v),healper(nums,idx+1,v)); 
+    int healper(vector<int> & nums,int idx,vector<int> &dp){
+        if(idx>nums.size()-1) return 0;
+        if(idx==nums.size()-1) return nums[idx];
+        if(dp[idx]!=-1) return dp[idx];
+        return  dp[idx] = max(nums[idx]+healper(nums,idx+2,dp),healper(nums,idx+1,dp));
     }
     int rob(vector<int>& nums) {
-        vector<int> v(nums.size()+1,-1);
-        return healper(nums,0,v);
-        
+        int n=nums.size();
+        vector<int> dp(n,-1);
+       return  healper(nums,0,dp);
     }
 };
