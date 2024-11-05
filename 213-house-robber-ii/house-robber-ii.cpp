@@ -14,8 +14,8 @@ public:
         if(n==1) return nums[0];
         vector<int> dp(n,-1);
         int includingFirst=healper(nums,0,n-1,dp);
-        vector<int> ap(n,-1);
-        int excludingFirst=healper(nums,1,n,ap);
+        fill(dp.begin(), dp.end(), -1);
+        int excludingFirst=healper(nums,1,n,dp);
         return max(includingFirst,excludingFirst);
     }
 };
