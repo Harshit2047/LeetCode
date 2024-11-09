@@ -1,20 +1,23 @@
 class Solution {
 public:
     bool isPerfect(int n){
-        int s=sqrt(n);
-        return s*s==n;
-    }
-    int healper(int n,vector<int> &dp){
-        if(isPerfect(n)) return 1;
-        if(dp[n]!=-1) return dp[n];
-        int m=INT_MAX;
-        for(int i=1;i*i<=n;i++){
-            m=min(m,healper(i*i,dp)+healper(n-i*i,dp));
-        }
-        return dp[n]=m;
+        int a=sqrt(n);
+        return a*a==n;
     }
     int numSquares(int n) {
-        vector<int> dp(n+1,-1);
-        return healper(n,dp);
+        vector<int> v(n+1);
+        for(int i=1;i<=n;i++){
+            if(isPerfect(i)) v[i]=1;
+            else{
+                int m=INT_MAX;
+                for(int j=1;j*j<=i;j++){
+                    int a=v[j*j]+v[i-j*j];
+                    m=min(m,a);
+                }
+                v[i]=m;
+            }
+        }
+       
+    return v[n];
     }
 };
