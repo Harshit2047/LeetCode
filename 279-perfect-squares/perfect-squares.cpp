@@ -1,23 +1,22 @@
 class Solution {
 public:
-    bool isPerfect(int n){
-        int a=sqrt(n);
-        return a*a==n;
+    bool isPer(int n){
+        int ok=sqrt(n);
+        return ok*ok==n;
+    }
+    int helper(int n ,vector<int> &dp){
+        if(isPer(n)==true) return 1;
+        int ok=INT_MAX;
+        if(dp[n]!=-1) return dp[n];
+        for(int i=1;i*i<=n;i++){
+            int count=helper(i*i,dp)+helper(n-i*i,dp);
+             ok=min(ok,count);
+        }
+
+        return dp[n]=ok;
     }
     int numSquares(int n) {
-        vector<int> v(n+1);
-        for(int i=1;i<=n;i++){
-            if(isPerfect(i)) v[i]=1;
-            else{
-                int m=INT_MAX;
-                for(int j=1;j*j<=i;j++){
-                    int a=v[j*j]+v[i-j*j];
-                    m=min(m,a);
-                }
-                v[i]=m;
-            }
-        }
-       
-    return v[n];
+        vector<int> dp(n+1,-1);
+        return helper(n,dp);
     }
 };
