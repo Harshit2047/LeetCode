@@ -13,18 +13,19 @@ public:
     // }
 
     int longestCommonSubsequence(string text1, string text2) {
-        vector<vector<int>> dp(text1.size(), vector<int>(text2.size()));
+        vector<vector<int>> dp(2, vector<int>(text2.size()));
         for (int i = 0; i < text1.size(); i++) {
             for (int j = 0; j < text2.size(); j++) {
-                int p = (i >= 1 && j > 0) ?  dp[i - 1][j - 1] : 0;
-                int q = (i >= 1) ? dp[i - 1][j] : 0;
-                int r = (j >= 1) ? dp[i][j - 1] : 0;
+                int p = (i >= 1 && j > 0) ?  dp[1 - 1][j - 1] : 0;
+                int q = (i >= 1) ? dp[1 - 1][j] : 0;
+                int r = (j >= 1) ? dp[1][j - 1] : 0;
                 if (text1[i] == text2[j])
-                    dp[i][j] = 1+ p;
+                    dp[1][j] = 1+ p;
                 else
-                    dp[i][j] = max(q, r);
+                    dp[1][j] = max(q, r);
             }
+            for(int x=0;x<text2.size();x++) dp[0][x]=dp[1][x];
         }
-        return dp[text1.size() - 1][text2.size() - 1];
+        return dp[1][text2.size() - 1];
     }
 };
