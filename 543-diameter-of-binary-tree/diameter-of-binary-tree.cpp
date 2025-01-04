@@ -6,30 +6,35 @@
  *     TreeNode *right;
  *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
  *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
- *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left),
- * right(right) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
  * };
  */
 class Solution {
 public:
-     int x=INT_MIN;
-    int height(TreeNode* root) {
+    int dia = 0;
+
+    int helper(TreeNode* root, unordered_map<TreeNode*, int>& mp) {
         if (root == NULL)
             return 0;
-        return 1 + max(height(root->left), height(root->right));
+
+        
+        if (mp.find(root) != mp.end())
+            return mp[root];
+
+        // Compute the height of left and right subtrees
+        int leftHeight = helper(root->left, mp);
+        int rightHeight = helper(root->right, mp);
+
+        // Update the diameter
+        dia = max(dia, leftHeight + rightHeight);
+
+        // Compute and store the height of the current node
+        return mp[root] = 1 + max(leftHeight, rightHeight);
     }
-    int helper(TreeNode* root) {
-        if (root == NULL)
-            return 0;
-        int leftHeight = height(root->left);
-        int rightHeight = height(root->right);
-        return leftHeight + rightHeight;
-    }
-    int diameterOfBinaryTree(TreeNode* root) { 
-        if(root==NULL) return 0;
-         x= max(x,helper(root));
-        diameterOfBinaryTree(root->left);
-        diameterOfBinaryTree(root->right);
-        return x;
+
+    int diameterOfBinaryTree(TreeNode* root) {
+        unordered_map<TreeNode*, int> mp;
+        helper(root, mp);
+        return dia;
     }
 };
