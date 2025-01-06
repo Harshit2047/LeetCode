@@ -11,20 +11,22 @@
  */
 class Solution {
 public:
-    int height(TreeNode* root){
-        if(root==NULL) return 0;
-        return 1+max(height(root->left),height(root->right));
+    bool ans;
+    int checkBalance(TreeNode* root){
+        if(!root)
+            return 0;
+        if(!ans) 
+            return 0;
+        int leftSubTree = checkBalance(root->left);
+        int rightSubTree = checkBalance(root->right);
+        if(abs(leftSubTree-rightSubTree) > 1){
+            ans = false;
+        }
+        return 1 + max(leftSubTree, rightSubTree);
     }
-    bool helper(TreeNode* root, unordered_map<TreeNode*,bool> &mp){
-        if(root==NULL) return true;
-        if(mp.find(root)!=mp.end()) return mp[root];
-        int l=height(root->left);
-        int r=height(root->right);
-       return mp[root]=(abs(l - r) <= 1) && helper(root->left,mp) && helper(root->right,mp);
-    }
-    bool isBalanced(TreeNode* root) {
-        unordered_map<TreeNode*,bool> mp;
-        if(root==NULL) return true;
-        return helper(root,mp);
+    bool isBalanced(TreeNode* root){
+        ans = true;
+        int temp = checkBalance(root);
+        return ans;
     }
 };
