@@ -41,7 +41,7 @@ public:
         vector<int> isVisited(n,-1);
         for(int i=0;i<n;i++){
             if(i == 0|| isVisited[i]==-1){
-                if(!bfs(graph,isVisited,i)) return false;
+                if(!dfs(graph,isVisited,i)) return false;
             } 
         }
         return true;
