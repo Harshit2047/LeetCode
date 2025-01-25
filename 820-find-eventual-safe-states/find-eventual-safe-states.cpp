@@ -1,34 +1,32 @@
 class Solution {
 public:
     vector<int> eventualSafeNodes(vector<vector<int>>& graph) {
-        vector<int> inD(graph.size(),0);
-        vector<int> ans;
-        vector<vector<int>> adj(graph.size(),vector<int>());
+        vector<vector<int>> RevAdj(graph.size(),vector<int>());
+        vector<int> freq(graph.size());
         for(int i=0;i<graph.size();i++){
             for(int j=0;j<graph[i].size();j++){
-                adj[graph[i][j]].push_back(i);
-                inD[i]++;
+                RevAdj[graph[i][j]].push_back(i);
+                freq[i]++;
             }
         }
-
         queue<int> q;
-        for(int i=0;i<inD.size();i++){
-            if(inD[i]==0) q.push(i);
+        for(int i=0;i<freq.size();i++){
+            if(freq[i]==0) q.push(i);
         }
+        vector<int> ans;
         while(q.size()){
             int temp=q.front();
             q.pop();
             ans.push_back(temp);
-            for(int i=0;i<adj[temp].size();i++){
-                int neighbor=adj[temp][i];
-                inD[neighbor]--;
-                if(inD[neighbor]==0) q.push(neighbor);
+            for(int i=0;i<RevAdj[temp].size();i++){
+                int neighbor=RevAdj[temp][i];
+                freq[neighbor]--;
+                if(freq[neighbor]==0) q.push(neighbor);
             }
 
         }
-       
-    sort(ans.begin(),ans.end());
-    return ans;
+        sort(ans.begin(),ans.end());
+        return ans;
 
     }
 };
