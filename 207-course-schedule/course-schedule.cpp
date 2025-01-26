@@ -1,29 +1,35 @@
 class Solution {
 public:
-    bool canFinish(int n, vector<vector<int>>& pre) {
-        vector<vector<int>> adj(n,vector<int>());
-        vector<int> freq(n);
-        for(int i=0;i<pre.size();i++){
-                adj[pre[i][1]].push_back(pre[i][0]);
-                freq[pre[i][0]]++;
-        }
-        queue<int> q;
-        for(int i=0;i<freq.size();i++){
-            if(freq[i]==0) q.push(i);
-        }
-        vector<int> ans;
-        while(q.size()){
-            int temp=q.front();
-            ans.push_back(temp);
-            q.pop();
-            for(int i=0;i<adj[temp].size();i++){
-                int neighbor=adj[temp][i];
-                freq[neighbor]--;
-                if(freq[neighbor]==0) q.push(neighbor);
+    bool dfs(vector<vector<int>> &adj,vector<bool> &isVisited,int start,vector<bool> &path){
+        isVisited[start]=true;
+        path[start]=true;
+        for(int i=0;i<adj[start].size();i++){
+            int neighbor=adj[start][i];
+            if(isVisited[neighbor]==false){
+                if(dfs(adj,isVisited,neighbor,path)){
+                    return true;
+                }
             }
-
+            else if(isVisited[neighbor] && path[neighbor]) return true;
+    
         }
-       return (ans.size()!=n) ? false : true;
-        
+        path[start]=false;
+        return false;
+    }
+    bool canFinish(int n, vector<vector<int>>& prerequisites) {
+         vector<vector<int>> adj(n, vector<int>());
+        vector<bool> isVisited(n, false);
+        for (int i = 0; i < prerequisites.size(); i++) {
+            adj[prerequisites[i][1]].push_back(prerequisites[i][0]);
+        }
+        vector<bool> path(n, false);
+        for (int i = 0; i < n; i++) {
+            if (!isVisited[i]) {  // Check if the node is not visited
+                if (dfs(adj, isVisited, i, path)) {  // Start DFS from each unvisited node
+                    return false;  // Cycle detected
+                }
+            }
+        }
+        return true; 
     }
 };
