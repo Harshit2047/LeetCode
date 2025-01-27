@@ -17,7 +17,7 @@ public:
             int temp = i.first;
             double cost = i.second;
             q.pop();
-            // if(costArr[temp]<cost) continue;
+             if(costArr[temp]>cost) continue;
             for (int i = 0; i < adj[temp].size(); i++) {
                 int neighbor = adj[temp][i].first;
                 double currCost = adj[temp][i].second;
