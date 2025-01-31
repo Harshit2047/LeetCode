@@ -1,40 +1,65 @@
 class Solution {
 public:
+     vector<int> parent;
+    vector<int> size;
+
     struct cmp {
-        bool operator()(const vector<int> &a, const vector<int> &b) { 
-            return a[2] > b[2];
+        bool operator()(const vector<int>& a, const vector<int>& b) {
+            return a[2] > b[2]; // Min-heap based on edge weight
         }
     };
-    
-    int minCostConnectPoints(vector<vector<int>>& points) {
-        int ans = 0;
-        priority_queue<vector<int>, vector<vector<int>>, cmp> pq;
-        vector<bool> isVisited(points.size(), false);
-        pq.push({0, -1, 0});
-        
-        while (!pq.empty()) { 
-            vector<int> v = pq.top();
-            pq.pop();
-            int temp = v[0];
-            int parent = v[1];
-            int wt = v[2];
 
-            if (isVisited[temp]) continue; 
-            ans += wt;
-            isVisited[temp] = true;
+    int find(int a) {
+        if (parent[a] == a) return a;
+        return parent[a] = find(parent[a]); // Path compression
+    }
 
-            for (int i = 0; i < points.size(); i++) { 
-                if (i == temp || isVisited[i]) continue; 
-
-                int x1 = points[temp][0];
-                int y1 = points[temp][1];
-                int x2 = points[i][0];
-                int y2 = points[i][1];
-                int weight = abs(x1 - x2) + abs(y1 - y2);
-
-                pq.push({i, temp, weight}); 
+    void unionSet(int a, int b) {
+        int leaderA = find(a);
+        int leaderB = find(b);
+        if (leaderA != leaderB) {
+            if (size[leaderA] > size[leaderB]) {
+                parent[leaderB] = leaderA;
+                size[leaderA] += size[leaderB];
+            } else {
+                parent[leaderA] = leaderB;
+                size[leaderB] += size[leaderA];
             }
         }
+    }
+    int minCostConnectPoints(vector<vector<int>>& points) {
+        int n=points.size();
+        parent.resize(n);
+        size.resize(n,1);
+        for(int i=0;i<points.size();i++){
+            parent[i]=i;
+        }
+        priority_queue<vector<int>,vector<vector<int>>,cmp> pq;
+        for(int u=0;u<points.size();u++){
+            for(int v=u+1;v<n;v++){
+                int x1=points[u][0];
+                int y1=points[u][1];
+                int x2=points[v][0];
+                int y2=points[v][1];
+                int dis=abs(x1-x2)+abs(y1-y2);
+                pq.push({u,v,dis});
+            }
+        }
+        int ans=0;
+        
+        while(pq.size()){
+            auto temp=pq.top();
+            pq.pop();
+            int u=temp[0];
+            int v=temp[1];
+            int cost=temp[2];
+            if(find(u)!=find(v)){
+                ans=ans+cost;
+                unionSet(u,v);
+            }
+
+        }
+
         return ans;
     }
 };
