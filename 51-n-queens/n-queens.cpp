@@ -12,20 +12,7 @@ public:
             i--;
             j++;
         }
-        i=row;
-        j=col;
-        while(i<n && j<n){
-            if(board[i][j]=='Q') return false;
-            i++;
-            j++;
-        }
-        i=row;
-        j=col;
-        while(i<n && j>=0){
-            if(board[i][j]=='Q') return false;
-            i++;
-            j--;
-        }
+        
         i=row;
         j=col;
         while(i>=0 && j>=0){
