@@ -32,9 +32,10 @@ public:
                     board[i][j] = x;
                     if (j != 8)helper(board, temp, i, j+1);
                     else helper(board, temp, i + 1, 0);
+                    board[i][j]='.';
 
                 }
-                 board[i][j]='.';
+
             }
         }
     }
