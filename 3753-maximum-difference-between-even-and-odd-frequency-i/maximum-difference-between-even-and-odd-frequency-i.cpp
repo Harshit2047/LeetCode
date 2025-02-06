@@ -1,24 +1,22 @@
 class Solution {
 public:
     int maxDifference(string s) {
-        vector<int> freq(26, 0);
-        for (char c : s) {
-            freq[c - 'a']++;
+        unordered_map<char, int> mp;
+        for (char ele : s) {
+            mp[ele]++;
         }
 
-        int maxOdd = INT_MIN;
-        int minEven = INT_MAX;
-
-        for (int count : freq) {
-            if (count > 0) {
-                if (count % 2 == 0) {
-                    minEven = min(minEven, count);
-                } else {
-                    maxOdd = max(maxOdd, count);
-                }
+        int even = INT_MAX, odd = INT_MIN;
+        for (auto x : mp) {
+            int freq = x.second;
+            if (freq % 2 == 0) {
+                even = min(even, freq);
+            } 
+            else {
+                odd = max(odd, freq);
             }
         }
-
-        return maxOdd - minEven;
+        if(odd==INT_MAX || even==INT_MIN) return -1;
+        return odd - even;
     }
 };
