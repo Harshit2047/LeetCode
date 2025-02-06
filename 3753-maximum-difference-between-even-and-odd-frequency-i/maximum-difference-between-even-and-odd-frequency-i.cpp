@@ -16,7 +16,7 @@ public:
                 odd = max(odd, freq);
             }
         }
-        if(odd==INT_MAX || even==INT_MIN) return -1;
+     //   if(odd==INT_MAX || even==INT_MIN) return -1;
         return odd - even;
     }
 };
