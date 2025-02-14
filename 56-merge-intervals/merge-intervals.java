@@ -7,7 +7,9 @@ class Solution {
             int a=intervals[i][0];
             int b=intervals[i][1];
             while(i<=m-2 && intervals[i+1][0]<=b){
-                b = Math.max(b, intervals[i + 1][1]);
+                if( intervals[i+1][1]<b)  b=b;
+                else b=intervals[i+1][1];
+                            // b = Math.max(b, intervals[i + 1][1]);
                 i++;
             }
             List<Integer>arr=new ArrayList<>();
