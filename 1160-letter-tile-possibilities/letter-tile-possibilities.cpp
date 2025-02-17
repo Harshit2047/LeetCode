@@ -13,9 +13,6 @@ public:
     int numTilePossibilities(string tiles) {
         unordered_set<string> s;
         helper(tiles,"",s);
-        for(auto i:s){
-            cout<<i<<" ";
-        }
         return s.size();
     }
 };
