@@ -1,26 +1,37 @@
 class Solution {
 public:
-    int shipWithinDays(vector<int>& weights, int th) {
-         int i = *max_element(weights.begin(), weights.end());
+    int helper(int mid,vector<int> weights){
+        int count=1;
+        int wt=mid;
+        for(auto i:weights){
+            if(wt<i){
+                count++;
+                wt=mid;
+                wt=wt-i;
+            }
+            else{
+                wt=wt-i;
+            }
+        }
+        return count;
+    }
+    int shipWithinDays(vector<int>& weights, int days) {
+        int i=INT_MIN;
+        for(auto x:weights) i=max(i,x);
         int j=0;
-        int ans=-1;
         for(auto i:weights) j+=i;
+        int ans=INT_MAX;
         while(i<=j){
             int mid=i+(j-i)/2;
-            int wt=mid;
-            int days=1;
-            for (int k = 0; k < weights.size(); k++) {
-                if (wt < weights[k]) { 
-                    days++;
-                    wt = mid;
-                }
-                wt -= weights[k]; 
+            int count=helper(mid,weights);
+            cout<<count<<" ";
+            if(count>days){
+                i=mid+1;
             }
-            if(days<=th){
-                ans=mid;
+            else{
                 j=mid-1;
+                ans=min(ans,mid);
             }
-            else i=mid+1;
         }
         return ans;
     }
