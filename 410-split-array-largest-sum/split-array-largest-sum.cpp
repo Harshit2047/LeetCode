@@ -1,22 +1,20 @@
 class Solution {
 public:
     int helper(int mid,vector<int> &nums,int k){
-        int count = 1, sum = 0;
-        
-        for (int num : nums) {
-            if (sum + num > mid) {
-                count++;  // Start a new subarray
-                sum = num;
-                if (count > k) return false;  // If more than k subarrays, return false
-            } else {
-                sum += num;
+        int count=1;
+        int sum=0;
+        for(int i=0;i<nums.size();i++){
+            if(sum+nums[i]>mid){
+                count++;
+                sum=nums[i];
             }
+            else sum+=nums[i];
         }
-        
-        return count <= k; 
+        return (count<=k);
     }
     int splitArray(vector<int>& nums, int k) {
-         int i = *max_element(nums.begin(), nums.end());
+        int i=INT_MIN;
+        for(auto x:nums) i=max(i,x);
         int j=0;
         for(auto x:nums) j+=x;
         int ans=-1;
