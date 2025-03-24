@@ -1,32 +1,31 @@
 class Solution {
-    void dfs(int x, const vector<vector<int>> &con, vector<bool> &mark, int &a, int &b) {
-        if (mark[x]) {
-            return;
-        }
-        mark[x] = true;
-        ++a;
-        b += con[x].size();
-        for (int y : con[x]) {
-            dfs(y, con, mark, a, b);
-        }
-    }
-    
 public:
-    int countCompleteComponents(int n, vector<vector<int>>& edges) {
-        vector<vector<int>> con(n);
-        for (const auto& e : edges) {
-            con[e[0]].push_back(e[1]);
-            con[e[1]].push_back(e[0]);
-        }
-        vector<bool> mark(n);
-        int r = 0;
-        for (int i = 0; i < n; ++i) {
-            if (!mark[i]) {
-                int x = 0, y = 0;
-                dfs(i, con, mark, x, y);
-                r += x * (x - 1) == y;
+    void dfs(int start,vector<vector<int>> &adjList,vector<bool> &isVisted,int &e,int &v){
+        isVisted[start]=true;
+        v++;
+        e+=adjList[start].size();
+        for(int i=0;i<adjList[start].size();i++){
+            if(isVisted[adjList[start][i]]==false){
+                dfs(adjList[start][i],adjList,isVisted,e,v);
             }
         }
-        return r;
+    }
+    int countCompleteComponents(int n, vector<vector<int>>& edges) {
+        vector<bool> isVisted(n,false);
+        vector<vector<int>> adjList(n);
+        for(int i=0;i<edges.size();i++){
+            adjList[edges[i][0]].push_back(edges[i][1]);
+            adjList[edges[i][1]].push_back(edges[i][0]);
+        }
+        int ans=0;
+        for(int i=0;i<n;i++){
+            if(isVisted[i]==false){
+                int e=0;
+                int v=0;
+                dfs(i,adjList,isVisted,e,v);
+                if((v*(v-1))==e) ans++;
+            }
+        }
+        return ans;
     }
 };
