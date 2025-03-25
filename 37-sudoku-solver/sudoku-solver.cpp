@@ -1,47 +1,45 @@
 class Solution {
 public:
-    bool isSafe(int row,int col,vector<vector<char>> & grid,char val){
+    bool isSafe(int num,vector<vector<char>> &board,int row,int col){
         for(int i=0;i<9;i++){
-            if(grid[i][col]==val) return false;
+            if((num+'0')==board[i][col]) return false;
         }
-
         for(int j=0;j<9;j++){
-            if(grid[row][j]==val) return false;
+            if((num+'0')==board[row][j]) return false;
         }
-        int x=(row/3)*3;
-        int y=(col/3)*3;
-        for(int i=x;i<x+3;i++){
-            for(int j=y;j<y+3;j++){
-                if(grid[i][j]==val) return false;
+        int Srow=(row/3)*3;
+        int Scol=(col/3)*3;
+        for(int i=Srow;i<Srow+3;i++){
+            for(int j=Scol;j<Scol+3;j++){
+                if((num+'0')==board[i][j]) return false;
             }
         }
         return true;
     }
-    void helper(vector<vector<char>>& board, vector<vector<char>> &temp, int i,int j) {
-        if(i==9){
-            temp.assign(board.begin(),board.end());
+    void helper(vector<vector<char>> &board,int row,int col,vector<vector<char>> &ans){
+        if (row == 9) {
+            ans = board;
             return;
         }
-        if(board[i][j]!='.'){
-            if(j!=8) helper(board,temp,i,j+1);
-            else helper(board,temp,i+1,0);
+        if (col == 9) { 
+            helper(board, row + 1, 0, ans);
+            return;
         }
-        else if (board[i][j] == '.') {
-            for (char x = '1'; x <= '9'; x++) {
-                if (isSafe(i, j, board,x)) {
-                    board[i][j] = x;
-                    if (j != 8)helper(board, temp, i, j+1);
-                    else helper(board, temp, i + 1, 0);
-                    board[i][j]='.';
-
-                }
-
+        if (board[row][col] != '.') {
+            helper(board, row, col + 1, ans);
+            return;
+        }
+        for (int num = 1; num <= 9; num++) {
+            if (isSafe(num, board, row, col)) {
+                board[row][col] = num + '0';
+                helper(board, row, col + 1, ans);
+                board[row][col] = '.';
             }
         }
     }
     void solveSudoku(vector<vector<char>>& board) {
-        vector<vector<char>> temp = board;
-         helper(board, temp, 0, 0);
-        board.assign(temp.begin(),temp.end());
+        vector<vector<char>> ans(9,vector<char>(9,'.'));
+        helper(board,0,0,ans);
+        board.assign(ans.begin(),ans.end());
     }
 };
