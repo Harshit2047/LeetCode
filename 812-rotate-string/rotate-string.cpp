@@ -1,13 +1,13 @@
 class Solution {
 public:
     bool rotateString(string s, string goal) {
-        if(s.length() != goal.length())return false;
-        string added = s+s;
-        if(added.find(goal) == -1)
-        {
-            return false;
-        }
-        return true;
-        
+        int size=s.length();
+        while(size--){
+            char last=s[s.size()-1];
+            s.pop_back();
+            s=last+s;
+            if(s==goal) return true;
+        }        
+        return false;
     }
 };
