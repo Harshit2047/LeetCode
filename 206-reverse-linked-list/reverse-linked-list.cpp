@@ -10,20 +10,21 @@
  */
 class Solution {
 public:
- ListNode* save=NULL;
-    ListNode* rev(ListNode* head){
+    ListNode* rev(ListNode* head,ListNode* &save){
         if(head->next==NULL) {
             save=head;
             return head;
         }
-        ListNode* temp=rev(head->next);
+        ListNode* temp=rev(head->next,save);
         temp->next=head;
         head->next=NULL;
         return head;
     }
     ListNode* reverseList(ListNode* head) {
         if(head==NULL) return NULL;
-         rev(head);
+        ListNode* save=head;
+        rev(head,save);
+        cout<<save->val;
          return save;
     }
 };
