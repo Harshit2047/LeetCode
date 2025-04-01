@@ -20,9 +20,7 @@ public:
             head=head->next;
             count++;
         }
-        for(auto i:v){
-            cout<<i<<" ";
-        }
+      
         if(v.size()==0) return{-1,-1};
         sort(v.begin(),v.end());
         int m=v[v.size()-1]-v[0];
