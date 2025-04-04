@@ -12,9 +12,9 @@ public:
             if((j-i+1)-maxF<=k) ans=max(ans,j-i+1);
             while((j-i+1)-maxF>k){
                 mp[s[i]]--;
-                for(auto i:mp){
-                    maxF=max(maxF,i.second);
-                }
+                // for(auto i:mp){
+                //     maxF=max(maxF,i.second);     // this loop is unnassary but hard to understand why 
+                // }
                 i++;
             } 
             j++;
