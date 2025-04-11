@@ -1,22 +1,27 @@
 class Solution {
 public:
-    int countSymmetricIntegers(int low, int high) {
-        int res = 0;  // variable to store the result
-        for(int i=low; i<=high; i++){  // loop until i is less than or equal to high
-            if(isSymmetric(i)) res++;  // if the number is symmetric increment the result
+    bool helper(string s){
+        int i=0;
+        int j=s.length()-1;
+        int sumR=0;
+        int sumL=0;
+        while(i<j){
+            sumR=sumR+(s[i]-'0');
+            sumL=sumL+(s[j]-'0');
+            i++;
+            j--;
         }
-        return res;  // return the result
+        if(sumR==sumL) return true;
+        else return false;
     }
-    bool isSymmetric(int num){  // function to check if the number is symmetric
-        string s = to_string(num);  // variable to store the string
-        int n = s.length();  // variable to store the length of the string
-        if(n%2 == 1) return false;  // if the length of the string is odd return false
-        int leftSum = 0;  // variable to store the left sum
-        int rightSum = 0;  // variable to store the right sum
-        for(int i=0; i<n/2; i++){  // loop until i is less than n/2
-            leftSum += s[i] - '0';  // update the left sum
-            rightSum += s[n-i-1] - '0';  // update the right sum
+    int countSymmetricIntegers(int low, int high) {
+        int count=0;
+        for(int i=low;i<=high;i++){
+            string s=to_string(i);
+            if(s.length()%2==0){
+                if(helper(s)) count++;
+            }
         }
-        return leftSum == rightSum;  // return true if the left sum is equal to the right sum else return false
+        return count;
     }
 };
