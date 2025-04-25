@@ -11,30 +11,19 @@
  */
 class Solution {
 public:
-    int dia = 0;
-
-    int helper(TreeNode* root, unordered_map<TreeNode*, int>& mp) {
-        if (root == NULL)
-            return 0;
-
-        
-        if (mp.find(root) != mp.end())
-            return mp[root];
-
-        // Compute the height of left and right subtrees
-        int leftHeight = helper(root->left, mp);
-        int rightHeight = helper(root->right, mp);
-
-        // Update the diameter
-        dia = max(dia, leftHeight + rightHeight);
-
-        // Compute and store the height of the current node
-        return mp[root] = 1 + max(leftHeight, rightHeight);
+    int ans=INT_MIN;
+    int height(TreeNode* root){
+        if(root==NULL) return 0;
+        return 1+max(height(root->left),height(root->right));
     }
-
+    void helper(TreeNode* root){
+        if(root==NULL) return;
+        ans=max(height(root->left)+height(root->right),ans);
+        helper(root->left);
+        helper(root->right);
+    }
     int diameterOfBinaryTree(TreeNode* root) {
-        unordered_map<TreeNode*, int> mp;
-        helper(root, mp);
-        return dia;
+         helper(root);
+         return ans;
     }
 };
