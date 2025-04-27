@@ -6,7 +6,6 @@ public:
         int ans=0;
         while(j<nums.size()){
             float temp=(float)nums[j-1]/2;
-            cout<<temp;
             if((nums[i])+(nums[j])==(temp)) ans++;
             i++;
             j++;
