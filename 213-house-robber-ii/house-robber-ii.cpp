@@ -1,23 +1,17 @@
 class Solution {
 public:
+    int helper(vector<int> &nums,int start,int size){
+        if(start==size) return max(nums[0],nums[1]);
+        vector<int> dp(nums.size());
+        dp[start]=nums[start];
+        dp[start+1]=max(dp[start],nums[start+1]);
+        for(int i=start+2;i<=size;i++){
+            dp[i]=max(nums[i]+dp[i-2],dp[i-1]);
+        }
+        return dp[size];
+    }
     int rob(vector<int>& nums) {
-        
-        int n=nums.size();
-        if(n==1) return nums[0];
-        vector<int> including(n);
-        including[0]=nums[0];
-     if(n>1) including[1]=max(nums[0],nums[1]);
-        for(int i=2;i<n-1;i++){
-            including[i]=max(nums[i]+including[i-2],including[i-1]);
-        }
-        vector<int> excluding(n);
-       
-     if(n>1)    excluding[1]=nums[1];
-     if(n>2)   excluding[2]=max(nums[1],nums[2]);
-        for(int i=3;i<n;i++){
-            excluding[i]=max(nums[i]+excluding[i-2],excluding[i-1]);
-        }
-
-        return max(excluding[n-1],including[n-2]);
+        if(nums.size()==1) return nums[0];
+        return max(helper(nums,0,nums.size()-2),helper(nums,1,nums.size()-1));
     }
 };
