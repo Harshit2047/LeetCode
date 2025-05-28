@@ -1,34 +1,30 @@
 class Solution {
 public:
-    int helper(vector<int>& nums, int idx, int prevIdx, vector<vector<int>>& dp) {
-        if (idx == nums.size()) return 0;
-        
-        if (dp[idx][prevIdx + 1] != -1) return dp[idx][prevIdx + 1];
-        
-        int take = 0;
-        if (prevIdx == -1 || nums[idx] > nums[prevIdx]) {
-            take = 1 + helper(nums, idx + 1, idx, dp); 
-        }
-        int notTake = helper(nums, idx + 1, prevIdx, dp);
-        
-        return dp[idx][prevIdx + 1] = max(take, notTake);
-    }
-    
-    int lengthOfLIS(vector<int>& nums) {
-        int n = nums.size();
-        int ans=0;
-        vector<int> dp(nums.size(),1);
-        for(int i=0;i<n;i++){
-            int maxValue=0;
-            for(int j=0;j<i;j++){
-                if(nums[i]>nums[j]){
-                    maxValue=max(maxValue,dp[j]);
-                }
+    int lowerBound(vector<int> nums,int val){
+        int low=0;
+        int high=nums.size()-1;
+        while(low<high){
+            int mid=low+(high-low)/2;
+             if(nums[mid]<val){
+                low=mid+1;
             }
-            dp[i]=dp[i]+maxValue;
-            ans=max(ans,dp[i]);
+            else{
+                high=mid;
+            }
         }
-        
-        return ans;
+        return low;
+    }
+    int lengthOfLIS(vector<int>& nums) {
+        vector<int> ans;
+        for(int i=0;i<nums.size();i++){
+            if(ans.size()==0 || ans.back()<nums[i]){
+                ans.push_back(nums[i]);
+            }
+            else{
+                int idx=lowerBound(ans,nums[i]);
+                ans[idx]=nums[i];
+            }
+        }
+        return ans.size();
     }
 };
