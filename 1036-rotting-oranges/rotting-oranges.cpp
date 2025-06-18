@@ -1,46 +1,41 @@
 class Solution {
 public:
     int orangesRotting(vector<vector<int>>& grid) {
-        vector<vector<int>> dir{{1, 0}, {-1, 0}, {0, -1}, {0, 1}};
-        queue<pair<int, int>> q;
-        int freshcount = 0;
-        for (int i = 0; i < grid.size(); i++) {
-            for (int j = 0; j < grid[0].size(); j++) {
-                if (grid[i][j] == 2) {
-                    q.push({i, j});
-                } else if (grid[i][j] == 1) {
-                    freshcount++;
+        int n=grid.size();
+        int m=grid[0].size();
+        vector<vector<int>> isVisited(n,vector<int>(m,0));
+        queue<pair<int,int>> q;
+        for(int i=0;i<n;i++){
+            for(int j=0;j<m;j++){
+                if(grid[i][j]==2){
+                    q.push({i,j});
                 }
             }
         }
-        if (freshcount == 0)
-            return 0;
-        int ans = 0;
-        while (q.size()) {
-            int s = q.size();
-            bool rooten = false;
-            for (int ok = 0; ok < s; ok++) {
-                auto temp = q.front();
+        vector<vector<int>> temp={{1,0},{0,1},{-1,0},{0,-1}};
+        while(q.size()){
+            int size=q.size();
+            for(int i=0;i<size;i++){
+                int x=q.front().first;
+                int y=q.front().second;
                 q.pop();
-                int i = temp.first;
-                int j = temp.second;
-                for (int x = 0; x < dir.size(); x++) {
-                    int i_ = i + dir[x][0];
-                    int j_ = j + dir[x][1];
-                    if ((i_ >= 0 && i_ < grid.size()) &&
-                        (j_ >= 0 && j_ < grid[0].size())) {
-                        if (grid[i_][j_] == 1) {
-                            grid[i_][j_] = 2;
-                            q.push({i_, j_});
-                            rooten = true;
-                            freshcount--;
-                        }
+                for(int j=0;j<temp.size();j++){
+                    int x_=x+temp[j][0];
+                    int y_=y+temp[j][1];
+                    if(x_>=0 && y_>=0 && x_<n && y_<m && isVisited[x_][y_]==0 && grid[x_][y_]==1){
+                        isVisited[x_][y_]=isVisited[x][y]+1;
+                        q.push({x_,y_});
                     }
                 }
             }
-            if (rooten == true)
-                ans++;
         }
-        return freshcount == 0 ? ans : -1;
+        int ans=0;
+        for(int i=0;i<n;i++){
+            for(int j=0;j<m;j++){
+                if(isVisited[i][j]==0 && grid[i][j]==1) return -1;
+                ans=max(ans,isVisited[i][j]);
+            }
+        }
+        return ans;
     }
 };
