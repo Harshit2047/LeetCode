@@ -2,48 +2,35 @@ class Solution {
 public:
     int largestRectangleArea(vector<int>& heights) {
         int n=heights.size();
-        vector<int> nse(n);
+        vector<int> nge(n);
         stack<int> st;
         st.push(n-1);
-        nse[n-1]=n;
+        nge[n-1]=n;
         for(int i=n-2;i>=0;i--){
             while(st.size() && heights[st.top()]>=heights[i]){
                 st.pop();
             }
-            if(st.size()==0) nse[i]=n;
-            else nse[i]=st.top();
-               st.push(i);
+            if(st.size()==0) nge[i]=n;
+            else nge[i]=st.top();
+            st.push(i);
         }
-
-        // for(auto i:nse){
-        //     cout<<i<<" ";
-        // }
-        // cout<<endl;
-        while(st.size()){
-            st.pop();
-        }
-
-        vector<int> pse(n);
+        while(st.size()) st.pop();
+        vector<int> pge(n);
+        pge[0]=-1;
         st.push(0);
-        pse[0]=-1;
-        for(int i=1;i<heights.size();i++){
-            while(st.size() && heights[st.top()]>heights[i]){
+        for(int i=1;i<n;i++){
+            while(st.size() && heights[st.top()]>=heights[i]){
                 st.pop();
             }
-            if(st.size()==0) pse[i]=-1;
-            else pse[i]=st.top();
-               st.push(i);
+            if(st.size()==0) pge[i]=-1;
+            else pge[i]=st.top();
+            st.push(i);
         }
-        //  for(auto i:pse){
-        //     cout<<i<<" ";
-        // }
-        // cout<<endl;
         int ans=INT_MIN;
-        for(int i=0;i<heights.size();i++){
-            int val=nse[i]-pse[i]-1;
-            ans=max(ans,val*heights[i]);
+        for(int i=0;i<n;i++){
+            int width=nge[i]-pge[i]-1;
+            ans=max(heights[i]*width,ans);
         }
         return ans;
-
     }
 };
