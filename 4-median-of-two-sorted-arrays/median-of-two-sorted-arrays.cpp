@@ -1,29 +1,62 @@
 class Solution {
 public:
     double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
-        int n = nums1.size();
-        int m = nums2.size();
-        int i = 0, j = 0, m1 = 0, m2 = 0;
-        for (int count = 0; count <= (n + m) / 2; count++) {
-            m2 = m1;
-            if (i != n && j != m) {
-                if (nums1[i] > nums2[j]) {
-                    m1 = nums2[j++];
-                } else {
-                    m1 = nums1[i++];
+        int n=nums1.size();
+        int m=nums2.size();
+        int ans1=-1;
+        int ans2=-1;
+        int idx1=(n+m-1)/2;
+        int idx2=(n+m)/2;
+        int i=0;
+        int j=0;
+        int count=0;
+        while(i<nums1.size() && j<nums2.size()){
+            if(nums1[i]<nums2[j]){
+                if(count==idx1){
+                    ans1=nums1[i];
                 }
-            } else if (i < n) {
-                m1 = nums1[i++];
-            } else {
-                m1 = nums2[j++];
+                if(count==idx2){
+                    ans2=nums1[i];
+                }
+                i++;
             }
+            else{
+                 if(count==idx1){
+                    ans1=nums2[j];
+                }
+                if(count==idx2){
+                    ans2=nums2[j];
+                }
+                j++;
+            }
+            count++;
         }
-
-        if ((n + m) % 2 == 1) {
-            return static_cast<double>(m1);
-        } else {
-            double ans = static_cast<double>(m1) + static_cast<double>(m2);
-            return ans / 2.0;
+        while(i<nums1.size()){
+            if(count==idx1){
+                ans1=nums1[i];
+            }
+            if(count==idx2){
+                ans2=nums1[i];
+            }
+            i++;
+            count++;
         }
+        while(j<nums2.size()){
+            if(count==idx1){
+                ans1=nums2[j];
+            }
+            if(count==idx2){
+                ans2=nums2[j];
+            }
+            j++;
+            count++;
+        }
+        if((n+m)%2==0){
+            return ((ans1+ans2)*1.0)/2;
+        }
+        else{
+            return ans2;
+        }
+        
     }
 };
