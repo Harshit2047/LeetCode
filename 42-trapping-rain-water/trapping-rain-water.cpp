@@ -1,25 +1,24 @@
 class Solution {
 public:
     int trap(vector<int>& height) {
-        int i = 0;
-        int j = height.size() - 1;
-        int leftMax = 0;
-        int rightMax = 0;
-        int ans = 0;
-        
-        while (i <= j) {
-            leftMax = max(height[i], leftMax);
-            rightMax = max(height[j], rightMax);  // Fix: Use height[j]
-            
-            if (leftMax <= rightMax) {
-                ans += leftMax - height[i];
-                i++;
-            } else {
-                ans += rightMax - height[j];  // Fix: Use height[j]
-                j--;
-            }
+        int n=height.size();
+        vector<int> NGE(n);
+        vector<int> PGE(n);
+        int temp=INT_MIN;
+        for(int i=0;i<n;i++){
+            temp=max(temp,height[i]);
+            PGE[i]=temp;
         }
-        
+        temp=INT_MIN;
+        for(int i=n-1;i>=0;i--){
+            temp=max(temp,height[i]);
+            NGE[i]=temp;
+        }
+        long long ans=0;
+        for(int i=0;i<n;i++){
+            int minVal=min(PGE[i],NGE[i]);
+            ans+=minVal-height[i];
+        }
         return ans;
     }
 };
