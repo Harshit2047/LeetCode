@@ -1,42 +1,34 @@
 class Solution {
 public:
-int MOD=1e9+7;
+    int MOD=1e9+7;
     int sumSubarrayMins(vector<int>& arr) {
-        int s=arr.size();
-        vector<int> pse(s);
+        int n=arr.size();
+        vector<int> nsi(n);
+        vector<int> psi(n);
         stack<int> st;
+        st.push(n-1);
+        nsi[n-1]=n;
+        for(int i=n-2;i>=0;i--){
+            while(st.size() && arr[st.top()]>=arr[i]) st.pop();
+            if(st.size()==0) nsi[i]=n;
+            else nsi[i]=st.top();
+            st.push(i);
+        }
+        while(st.size()) st.pop();
         st.push(0);
-        pse[0]=-1;
-        for(int i=1;i<arr.size();i++){
-            while(st.size() && arr[st.top()]>arr[i]){
-                st.pop();
-            }
-            if(st.size()!=0) pse[i]=st.top();
-            else pse[i]=-1;
+        psi[0]=-1;
+        for(int i=1;i<n;i++){
+            while(st.size() && arr[st.top()]>arr[i]) st.pop();
+            if(st.size()==0) psi[i]=-1;
+            else psi[i]=st.top();
             st.push(i);
         }
-        
-        while(st.size()){
-            st.pop();
-        }
-        vector<int> nxe(s);
-        nxe[s-1]=s;
-        st.push(s-1);
-        for(int i=s-2;i>=0;i--){
-            while(st.size() && arr[st.top()]>=arr[i]){
-                st.pop();
-            }
-            if(st.size()!=0) nxe[i]=st.top();
-            else nxe[i]=s;
-            st.push(i);
-        }
-        
-      
-        int ans=0;
-        for(int i=0;i<arr.size();i++){
-            int left = i - pse[i];
-            int right = nxe[i] - i;
-            ans = (ans + ((long long)left * right % MOD) * arr[i] % MOD) % MOD;
+        int  ans=0;
+        for(int i=0;i<n;i++){
+            long long left=i-psi[i];
+            long long right=nsi[i]-i;
+            ans = (ans + (left * right % MOD) * arr[i] % MOD) % MOD;
+
         }
         return ans;
     }
