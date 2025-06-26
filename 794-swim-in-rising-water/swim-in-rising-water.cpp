@@ -17,7 +17,7 @@ public:
             int x = curr[1];
             int y = curr[2];
             
-            isVisited[x][y] = true;
+          
             
             if (x == n - 1 && y == n - 1) return val;
             
