@@ -1,49 +1,36 @@
 class Solution {
 public:
-    bool bfs(vector<vector<int>>& graph,vector<int> &isVisited,int start){
-        isVisited[start]=1;
-        queue<int> q;
-        q.push(start);
+    bool helper(vector<vector<int>> &graph,vector<int> &isVisited,int i){
+        queue<pair<int,int>> q;
+        q.push({i,-1});
         while(q.size()){
-            int temp=q.front();
+            int idx=q.front().first;
+            int color=q.front().second;
             q.pop();
-
-            for(int i=0;i<graph[temp].size();i++){
-                int neighbor=graph[temp][i];
-                if(isVisited[neighbor]==-1){
-                    isVisited[neighbor]=isVisited[temp] ? 0 : 1;
-                    q.push(neighbor);
+            for(int i=0;i<graph[idx].size();i++){
+                if(isVisited[graph[idx][i]]==-1){
+                    int c=color^1;
+                    isVisited[graph[idx][i]]=c;
+                    q.push({graph[idx][i],c});
                 }
-                else if(isVisited[neighbor]== isVisited[temp]){
-                    return false;
+                else{
+                    if(color==isVisited[graph[idx][i]]) return false;
                 }
             }
         }
         return true;
+    }
 
-    }
-    bool dfs(vector<vector<int>> &graph, vector<int> &isVisited, int start) {
-        for (int i = 0; i < graph[start].size(); i++) {
-            int n = graph[start][i];
-            if (isVisited[n] == -1) {
-                // Assign the opposite color to the neighbor
-                isVisited[n] = 1 - isVisited[start];
-                if (!dfs(graph, isVisited, n)) return false; // Check the result of the recursive call
-            } else if (isVisited[n] == isVisited[start]) {
-                // If the neighbor has the same color, it's not bipartite
-                return false;
-            }
-        }
-        return true;
-    }
     bool isBipartite(vector<vector<int>>& graph) {
         int n=graph.size();
         vector<int> isVisited(n,-1);
         for(int i=0;i<n;i++){
-            if(i == 0|| isVisited[i]==-1){
-                if(!dfs(graph,isVisited,i)) return false;
-            } 
+            if(isVisited[i]==-1){
+                if(helper(graph,isVisited,i)==false){
+                    return false;
+                }
+            }
         }
-        return true;
+        return true;;
     }
 };
