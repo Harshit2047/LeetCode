@@ -1,64 +1,73 @@
 class Solution {
 public:
-    vector<vector<int>> dir{{1,0},{-1,0},{0,1},{0,-1}};
-    unordered_map<int,int> mp;
-    
-    int dfs(int i, int j, vector<vector<int>> &grid, vector<vector<bool>> &isVisited, int id) {
-        if(i < 0 || i >= grid.size() || j < 0 || j >= grid[0].size() || isVisited[i][j] || grid[i][j] != 1) 
-            return 0;
-        
-        isVisited[i][j] = true;
-        grid[i][j] = id;
+    int helper(vector<vector<int>>& grid, int i, int j, int color) {
+        int n = grid.size();
+        int m = grid[0].size();
         int count = 1;
-        
-        for(auto &d : dir) {
-            int i_ = i + d[0];
-            int j_ = j + d[1];
-            count += dfs(i_, j_, grid, isVisited, id);
+        queue<pair<int, int>> q;
+        q.push({i, j});
+        grid[i][j] = color;
+        vector<vector<int>> dir = {{-1, 0}, {0, -1}, {1, 0}, {0, 1}};
+        while (q.size()) {
+            int x = q.front().first;
+            int y = q.front().second;
+            q.pop();
+            for (int i = 0; i < dir.size(); i++) {
+                int x_ = x + dir[i][0];
+                int y_ = y + dir[i][1];
+                if (x_ >= 0 && y_ >= 0 && x_ < n && y_ < m &&
+                    grid[x_][y_] == 1) {
+                    count++;
+                    grid[x_][y_] = color;
+                    q.push({x_, y_});
+                }
+            }
         }
-        
         return count;
     }
-
     int largestIsland(vector<vector<int>>& grid) {
+        int color = 2;
         int n = grid.size();
-        vector<vector<bool>> isVisited(n, vector<bool>(n, false));
-        int id = 2, ans = 0;
-        
-        for(int i = 0; i < n; i++) {
-            for(int j = 0; j < n; j++) {
-                if(grid[i][j] == 1 && !isVisited[i][j]) {
-                    mp[id] = dfs(i, j, grid, isVisited, id);
-                    ans = max(ans, mp[id]);
-                    id++;
+        int m = grid[0].size();
+        unordered_map<int, int> mp;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (grid[i][j] == 1) {
+                    int count = helper(grid, i, j, color);
+                    mp[color] = count;
+                    color++;
                 }
             }
         }
-        
-        for(int i = 0; i < n; i++) {
-            for(int j = 0; j < n; j++) {
-                if(grid[i][j] == 0) {
-                    unordered_set<int> uniqueIds;
-                    int val = 1;
-                    
-                    for(auto &d : dir) {
-                        int i_ = i + d[0];
-                        int j_ = j + d[1];
-                        
-                        if(i_ >= 0 && i_ < n && j_ >= 0 && j_ < n && grid[i_][j_] > 1) {
-                            uniqueIds.insert(grid[i_][j_]);
+        int Finalans = 0;
+        vector<vector<int>> temp = {{-1, 0}, {0, -1}, {0, 1}, {1, 0}};
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (grid[i][j] == 0) {
+                    unordered_set<int> st;
+                    int ans = 1;
+                    for (int k = 0; k < temp.size(); k++) {
+                        int x_ = i + temp[k][0];
+                        int y_ = j + temp[k][1];
+                        if (x_ >= 0 && y_ >= 0 && x_ < n && y_ < m) {
+                            int color = grid[x_][y_];
+                            if (st.find(color) == st.end()) {
+                                
+                                int count = mp[color];
+                                ans += count;
+                                st.insert(color);
+                            }
                         }
                     }
-                    
-                    for(int id : uniqueIds) {
-                        val += mp[id];
-                    }
-                    
-                    ans = max(ans, val);
+                    Finalans = max(Finalans, ans);
                 }
             }
         }
-        
-        return ans;
+        if (Finalans == 0) {
+            for (auto i : mp) {
+                Finalans = max(Finalans, i.second);
+            }
+        }
+        return Finalans;
     }
 };
