@@ -1,32 +1,35 @@
 class Solution {
 public:
     vector<int> eventualSafeNodes(vector<vector<int>>& graph) {
-        vector<vector<int>> RevAdj(graph.size(),vector<int>());
-        vector<int> freq(graph.size());
+        int V=graph.size();
+        vector<int> outDegree(V);
+        vector<vector<int>> adj(V);
         for(int i=0;i<graph.size();i++){
             for(int j=0;j<graph[i].size();j++){
-                RevAdj[graph[i][j]].push_back(i);
-                freq[i]++;
+                adj[graph[i][j]].push_back(i);
+                outDegree[i]=graph[i].size();
             }
         }
         queue<int> q;
-        for(int i=0;i<freq.size();i++){
-            if(freq[i]==0) q.push(i);
+        for(int i=0;i<outDegree.size();i++){
+            if(outDegree[i]==0) q.push(i);
         }
         vector<int> ans;
         while(q.size()){
-            int temp=q.front();
+            int idx=q.front();
+            ans.push_back(idx);
             q.pop();
-            ans.push_back(temp);
-            for(int i=0;i<RevAdj[temp].size();i++){
-                int neighbor=RevAdj[temp][i];
-                freq[neighbor]--;
-                if(freq[neighbor]==0) q.push(neighbor);
+            for(int i=0;i<adj[idx].size();i++){
+                int neighbor=adj[idx][i];
+                outDegree[neighbor]--;
+                if(outDegree[neighbor]==0) q.push(neighbor);
             }
-
+        }
+        while(q.size()){
+            ans.push_back(q.front());
+            q.pop();
         }
         sort(ans.begin(),ans.end());
         return ans;
-
     }
 };
