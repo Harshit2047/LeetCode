@@ -1,35 +1,31 @@
 class Solution {
 public:
     int networkDelayTime(vector<vector<int>>& times, int n, int k) {
-        vector<vector<pair<int,int>>> adj(n+1,vector<pair<int,int>>());
+        vector<vector<pair<int,int>>> adj(n+1);
         for(int i=0;i<times.size();i++){
             adj[times[i][0]].push_back({times[i][1],times[i][2]});
         }
-        vector<int> costArr(n+1,INT_MAX);
-        costArr[k]=0;
         queue<pair<int,int>> q;
         q.push({k,0});
+        vector<int> isVisited(n+1,INT_MAX);
+        isVisited[k]=0;
         while(q.size()){
-            auto i=q.front();
+            int idx=q.front().first;
+            int time=q.front().second;
             q.pop();
-            int temp=i.first;
-            int cost=i.second;
-            if(costArr[temp]<i.second) continue;
-            for(int i=0;i<adj[temp].size();i++){
-                int neighbor=adj[temp][i].first;
-                int currCost=adj[temp][i].second;
-                int total=cost+currCost;
-                if(costArr[neighbor]>total){
-                    costArr[neighbor]=total;
-                    q.push({neighbor,total});
+            for(int i=0;i<adj[idx].size();i++){
+                int neighbor=adj[idx][i].first;
+                int currTime=adj[idx][i].second;
+                if(isVisited[neighbor]>time+currTime){
+                    isVisited[neighbor]=time+currTime;
+                    q.push({neighbor,time+currTime});
                 }
             }
-        } 
-        int ans=INT_MIN;
-        for(int i=1;i<=n;i++){
-            ans=max(ans,costArr[i]);
         }
-        if(ans==INT_MAX) return -1;
-        return ans;
+        int ans=INT_MIN;
+        for(int i=1;i<isVisited.size();i++){
+            ans=max(ans,isVisited[i]);
+        }
+        return ans==INT_MAX ? -1 : ans;
     }
 };
