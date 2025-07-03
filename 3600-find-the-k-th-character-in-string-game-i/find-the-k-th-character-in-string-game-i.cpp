@@ -8,7 +8,6 @@ public:
                 temp+=char((s[i]+1));
                 
             }
-            cout<<temp<<endl;;
             s+=temp;
         }
         return s[k-1];
