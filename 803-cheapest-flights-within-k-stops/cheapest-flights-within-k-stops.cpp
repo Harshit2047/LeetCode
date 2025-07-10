@@ -1,40 +1,34 @@
 class Solution {
 public:
-    struct compare{
-        bool operator()(const vector<int> &a,const vector<int>&b){
-            if(a[2]==b[2]) return a[1]>b[1];
-            return a[2]>b[2];
-        }
-    };
     int findCheapestPrice(int n, vector<vector<int>>& flights, int src, int dst, int k) {
-        vector<vector<pair<int,int>>> adj(n,vector<pair<int,int>>());
-        for(int i=0;i<flights.size();i++){
-            adj[flights[i][0]].push_back({flights[i][1],flights[i][2]});
+        // Build the graph
+        vector<pair<int, int>> adj[n];
+        for (auto& flight : flights) {
+            adj[flight[0]].push_back({flight[1], flight[2]});
         }
-        vector<int> costArr(n,INT_MAX);
-        priority_queue<vector<int>,vector<vector<int>>,compare> pq;
-        costArr[src]=0;
-        pq.push({src,0,1});
-        while(pq.size()){
-            vector<int> temp=pq.top();
-            pq.pop();
-            int s=temp[0];
-            int cost=temp[1];
-            int count=temp[2];
-            if(count>k+1) continue;
-            for(int i=0;i<adj[s].size();i++){
-                int neighbor=adj[s][i].first;
-                int currCost=adj[s][i].second;
-                int total=currCost+cost;
-                if(costArr[neighbor]>total){
-                    costArr[neighbor]=total;
-                    pq.push({neighbor,total,count+1});
+
+        // Min-heap: (cost, node, stops)
+        priority_queue<tuple<int, int, int>, vector<tuple<int, int, int>>, greater<>> pq;
+        pq.push({0, src, 0});
+
+        // Use a 2D visited: min cost to reach (node, stops)
+        vector<vector<int>> dist(n, vector<int>(k + 2, INT_MAX));
+        dist[src][0] = 0;
+
+        while (!pq.empty()) {
+            auto [cost, u, stops] = pq.top(); pq.pop();
+
+            if (u == dst) return cost;
+            if (stops > k) continue;
+
+            for (auto [v, price] : adj[u]) {
+                if (cost + price < dist[v][stops + 1]) {
+                    dist[v][stops + 1] = cost + price;
+                    pq.push({cost + price, v, stops + 1});
                 }
             }
         }
-        int ans=costArr[dst];
-        if(ans==INT_MAX) return -1;
-        return ans;
-        
+
+        return -1;
     }
 };
