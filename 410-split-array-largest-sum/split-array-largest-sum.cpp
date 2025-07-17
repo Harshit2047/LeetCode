@@ -1,33 +1,38 @@
 class Solution {
 public:
-    int helper(int mid,vector<int> &nums,int k){
+    bool helper(vector<int> &nums,int k,int sum){
         int count=1;
-        int sum=0;
+        int temp=sum;
         for(int i=0;i<nums.size();i++){
-            if(sum+nums[i]>mid){
+            if(temp-nums[i]<0){
                 count++;
-                sum=nums[i];
+                temp=sum;
             }
-            else sum+=nums[i];
+            temp-=nums[i];
         }
-        return (count<=k);
+        if(count<=k) return true;
+        else return false;
     }
     int splitArray(vector<int>& nums, int k) {
-        int i=INT_MIN;
-        for(auto x:nums) i=max(i,x);
-        int j=0;
-        for(auto x:nums) j+=x;
+        if(k>nums.size()) return false;
+        int low=INT_MIN;
+        int high=0;
+        for(auto i:nums){
+            low=max(low,i);
+            high+=i;
+        }
         int ans=-1;
-        while(i<=j){
-            int mid=i+(j-i)/2;
-            if(helper(mid,nums,k)){
-                j=mid-1;
+        while(low<=high){
+            int mid=low+(high-low)/2;
+            if(helper(nums,k,mid)){
+                 high=mid-1;
                 ans=mid;
             }
             else{
-                i=mid+1;
+               low=mid+1;
             }
         }
         return ans;
+
     }
 };
