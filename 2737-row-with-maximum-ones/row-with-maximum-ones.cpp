@@ -1,20 +1,31 @@
 class Solution {
 public:
-    vector<int> rowAndMaximumOnes(vector<vector<int>>& mat) {
-        int m = mat.size();
-        int n = mat[0].size();
-        int maxCount = 0;
-        int maxRow = 0;
-        for (int i = 0; i < m; i++) {
-            int count = 0;
-            for (int j = 0; j < n; j++) {
-                count += mat[i][j];
+    int helper(vector<int> v){
+        int low=0;
+        int high=v.size()-1;
+        sort(v.begin(),v.end());
+        int ans=-1;
+        while(low<=high){
+            int mid=low+(high-low)/2;
+            if(v[mid]==1){
+                ans=mid;
+                high=mid-1;
             }
-            if (count > maxCount) {
-                maxCount = count;
-                maxRow = i;
+            else low=mid+1;
+        }
+        return ans==-1 ? 0 : v.size()-ans;
+    }
+    vector<int> rowAndMaximumOnes(vector<vector<int>>& mat) {
+        int n=mat.size();
+        int Count=INT_MIN;
+        int idx=-1;
+        for(int i=0;i<n;i++){
+           int temp= helper(mat[i]);
+            if(temp>Count){
+                idx=i;
+                Count=temp;
             }
         }
-        return {maxRow, maxCount};
+        return {idx,Count};
     }
 };
