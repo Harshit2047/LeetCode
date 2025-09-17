@@ -24,8 +24,10 @@ public:
     }
     
     string highestRated(string cuisine) {
-        return cuisine_rating[cuisine].begin()->second;
-
+        for(auto temp:cuisine_rating[cuisine]){
+            return temp.second;
+        }
+        return "";
     }
 };
 
