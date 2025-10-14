@@ -1,62 +1,76 @@
-class DListNode {
-public:
-    int key, val;
-    DListNode* prev;
-    DListNode* next;
-    DListNode(int key, int val) {
-        this->key = key;
-        this->val = val;
-        prev = nullptr;
-        next = nullptr;
-    }
-};
-
+ class Node{
+    public:
+        Node* next;
+        Node* prev;
+        int key;
+        int val;
+        Node(int key,int val){
+            this->val=val;
+            this->key=key;
+        }
+    };
 class LRUCache {
 public:
-    int capacity;
-    unordered_map<int, DListNode*> mp;
-    DListNode* head;
-    DListNode* tail;
 
+    int size;
+    Node* head=new Node(-1,-1);
+    Node* tail=new Node(-1,-1);
+    unordered_map<int,Node*> mp;
+    void deleteNode(Node* temp){
+        Node* p=temp->prev;
+        Node* n=temp->next;
+        p->next=n;
+        n->prev=p;
+    }
+    void insertAtHead(Node* temp){
+        Node* n=head->next;
+        head->next=temp;
+        temp->next=n;
+        n->prev=temp;
+        temp->prev=head;
+    }
     LRUCache(int capacity) {
-        this->capacity = capacity;
-        head = new DListNode(-1, -1);
-        tail = new DListNode(-1, -1);
-        head->next = tail;
-        tail->prev = head;
+        size=capacity;
+        head->next=tail;
+        tail->prev=head;
     }
-
-    void removeNode(DListNode* node) {
-        node->prev->next = node->next;
-        node->next->prev = node->prev;
-        mp.erase(node->key);
-        delete node;
-    }
-
-    void insertAtHead(DListNode* node) {
-        node->next = head->next;
-        node->prev = head;
-        head->next->prev = node;
-        head->next = node;
-        mp[node->key] = node;
-    }
-
+    
     int get(int key) {
-        if (mp.find(key) == mp.end()) return -1;
-        DListNode* node = mp[key];
-        int val = node->val;
-        removeNode(node);
-        insertAtHead(new DListNode(key, val));
-        return val;
+        if(mp.find(key)==mp.end()) return -1;
+        Node* temp=mp[key];
+        deleteNode(temp);
+        mp.erase(key);
+        insertAtHead(temp);
+        mp[key]=temp;
+        return temp->val;
     }
-
     void put(int key, int value) {
-        if (mp.find(key) != mp.end()) {
-            removeNode(mp[key]);
+        Node* newNode=new Node(key,value);
+        if(mp.find(key)!=mp.end()){
+            deleteNode(mp[key]);
+            insertAtHead(newNode);
+            mp.erase(key);
+            mp[key]=newNode;
         }
-        if (mp.size() == capacity) {
-            removeNode(tail->prev);
+        else{
+            if(size!=0){
+                insertAtHead(newNode);
+                mp[key]=newNode;
+                size--;
+            }
+            else{
+                mp.erase(tail->prev->key);
+                deleteNode(tail->prev);
+                insertAtHead(newNode);
+                mp[key]=newNode;
+            }
         }
-        insertAtHead(new DListNode(key, value));
     }
 };
+
+/**
+ * Your LRUCache object will be instantiated and called as such:
+ * LRUCache* obj = new LRUCache(capacity);
+ * int param_1 = obj->get(key);
+ * obj->put(key,value);
+ */
