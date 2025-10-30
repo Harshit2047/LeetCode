@@ -27,7 +27,7 @@ public:
             fast=fast->next->next;
         }
         ListNode* head2=helper(slow);
-        while(head2!=NULL && head2!=NULL){
+        while( head2!=NULL){
             if(head2->val!=head->val) return false;
             head=head->next;
             head2=head2->next;
