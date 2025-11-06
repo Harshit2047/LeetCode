@@ -12,17 +12,19 @@
 class Solution {
 public:
     int ans=0;
-    int helper(TreeNode* root,int Pval){
+    int helper2(TreeNode* root,int val){
         if(root==NULL) return 0;
-        int left=helper(root->left,root->val);
-        int right=helper(root->right,root->val);
-        ans=max({ans,left+right,left,right});
-        if(root->val!=Pval) return 0;
-        return max(1+left,1+right);
+        if(root->val==val) return 1+max(helper2(root->left,val),helper2(root->right,val));
+        return 0;
+    }
+    void helper(TreeNode* root){
+        if(root==NULL) return;
+        helper(root->left);
+        helper(root->right);
+        ans=max(ans,helper2(root->left,root->val)+helper2(root->right,root->val));
     }
     int longestUnivaluePath(TreeNode* root) {
-        if(root==NULL) return NULL;
-        helper(root,root->val);
+        helper(root);
         return ans;
     }
 };
