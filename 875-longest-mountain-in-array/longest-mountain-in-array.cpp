@@ -2,13 +2,19 @@ class Solution {
 public:
     int longestMountain(vector<int>& arr) {
         int ans=0;
-        for(int i=1;i<arr.size()-1;i++){
-            int left=i;
-            int right=i;
-            while(left>0 && arr[left-1]<arr[left])left--;
-            while(right<arr.size()-1 && arr[right]>arr[right+1]) right++;
-            int size=  (left!=i && right!= i ) ? (right-left+1):0;
-            ans=max(ans,size);
+        int n=arr.size();
+        vector<int> inc(n,0);
+        vector<int> dec(n,0);
+        for(int i=1;i<arr.size();i++){
+            if(arr[i-1]<arr[i]) inc[i]=inc[i-1]+1;
+            else inc[i]=0;
+        }
+        for(int i=arr.size()-2;i>=0;i--){
+            if(arr[i+1]<arr[i]) dec[i]=dec[i+1]+1;
+            else dec[i]=0;
+        }
+        for(int i=0;i<n;i++){
+            if(inc[i]!=0 && dec[i]!=0) ans=max(ans,inc[i]+dec[i]+1);
         }
         return ans;
     }
